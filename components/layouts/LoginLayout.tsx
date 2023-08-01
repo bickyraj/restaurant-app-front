@@ -46,7 +46,7 @@ const LoginLayout: React.FC<LoginLayoutProps> = ({ children }) => {
                     fontStyle: "italic",
                     marginBottom: "32px",
                     textAlign: "center",
-                  }}>Codefly</h1>
+                  }}>My Restaurant</h1>
               <h2 className="mt-6 mb-6 text-3xl leading-9 font-extrabold text-gray-900">
                 Sign in to your account
               </h2>

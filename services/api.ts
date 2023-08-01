@@ -4,9 +4,11 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 const api = axios.create({
-  // baseURL: "http://38.242.149.105:5000/api",
-  baseURL: "http://javanitalab.com:5000/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 10000, // Set a timeout for requests (optional)
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 export const eventEmitter = new EventEmitter();
@@ -31,6 +33,22 @@ api.interceptors.request.use((config: AxiosRequestConfig): any => {
   return config;
 });
 
+// Function to set the access token in the Axios headers and local storage
+const setAccessToken = (accessToken: string) => {
+  if (accessToken) {
+    api.defaults.headers.common['access_token'] = `Bearer ${accessToken}`;
+    localStorage.setItem('access_token', accessToken);
+  } else {
+    delete api.defaults.headers.common['Authorization'];
+    localStorage.removeItem('access_token');
+  }
+};
+
+// Function to get the access token from local storage
+const getAccessToken = () => {
+  return localStorage.getItem('access_token') || null;
+};
+
 export const emitNotification = (
   message: string,
   type: "success" | "error" | "warning"
@@ -38,4 +56,4 @@ export const emitNotification = (
   eventEmitter.emit("notification", message, type);
 };
 
-export default api;
+export { api, setAccessToken, getAccessToken };

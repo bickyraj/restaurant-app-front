@@ -1,7 +1,7 @@
 import LoginLayout from "@/components/layouts/LoginLayout";
 import { useAuthContext } from "@/contexts/AuthContext";
 import AuthService from "@/services/AuthService";
-import { emitNotification } from "@/services/api";
+import { emitNotification, setAccessToken } from "@/services/api";
 import { useRouter } from "next/router";
 import React, { useState, ReactNode } from 'react';
 
@@ -58,7 +58,8 @@ const Login: React.FC & { Layout: React.FC } = (props: any) => {
     if (isFormValid) {
       try {
         const response = await authService.login(formFields);
-        const token = response.data.token;
+        const token = response.data.accessToken;
+        setAccessToken(token);
         login(token);
         router.push('/');
       } catch (error: any) {
