@@ -15,6 +15,9 @@ class AuthService {
       throw new Error('Failed to login');
     }
   }
+  logout = (): void => {
+    localStorage.removeItem('access_token');
+  }
 }
 
 export default AuthService;

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Link from "next/link";
-import CategoryService from '@/services/CategoryService';
+import SubCategoryService from '@/services/SubCategoryService';
 import Modal from '@/components/Modal';
 import { emitNotification } from '@/services/api';
 import { useRouter } from 'next/router';
 import { capitalizeFirstLetter } from '@/utils/general';
 import SVGRiceBowl from '@/components/svg/SVGRiceBowl';
+import SVGBurger from '@/components/svg/SVGBurger';
 
 interface CategoryData {
   _id: number;
@@ -16,13 +17,13 @@ const Index: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
-  const categoryService = new CategoryService();
+  const categoryService = new SubCategoryService();
   const [data,
     setData] = useState<CategoryData | null | any>(null);
 
   const fetchData = async () => {
     try {
-      const response = await categoryService.getList('/category/all');
+      const response = await categoryService.getList('/sub-category/all');
       if (Array.isArray(response.data)) {
         const modifiedData = response.data.map((item: CategoryData) => ({ _id: item._id, name: item.name }));
         setData(modifiedData);
@@ -46,7 +47,7 @@ const Index: React.FC = () => {
                 color="#0891b2"
                 class="w-16 h-16"
               />
-              <div className="ml-5">
+              <div className="ml-5 capitalize">
                 {capitalizeFirstLetter(item.name)}
               </div>
             </div>
@@ -55,7 +56,7 @@ const Index: React.FC = () => {
           {/* <div className="mb-2 text-xs text-gray-400">{item.chapterName}</div> */}
           <div>
             <button onClick={() => router.push(`/lessons/edit/${item._id}`)} className="transition-all duration-300 text-xs text-gray-300 hover:text-green-400 hover:bg-green-50 px-3 py-1 rounded-sm">View</button>
-            <Link href={`/food-categories/edit/${item._id}`} className="transition-all duration-300 text-xs text-gray-300 hover:text-cyan-400 hover:bg-cyan-50 px-3 py-1 rounded-sm">Edit</Link>
+            <Link href={`/food-sub-categories/edit/${item._id}`} className="transition-all duration-300 text-xs text-gray-300 hover:text-cyan-400 hover:bg-cyan-50 px-3 py-1 rounded-sm">Edit</Link>
             <button onClick={() => handleOnclickDelete(item._id)} className="transition-all duration-300 text-xs text-gray-300 hover:text-red-400 hover:bg-red-50 px-3 py-1 rounded-sm">Delete</button>
           </div>
         </div>
@@ -94,13 +95,13 @@ const Index: React.FC = () => {
           <div className="py-6 md:flex md:items-center md:justify-between lg:border-t lg:border-cool-gray-200">
             <div className="flex-1 min-w-0">
               <div className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-16 h-16">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                </svg>
+                <SVGBurger
+                  class="h-16 w-16"
+                />
                 <div>
                   <div className="flex items-center">
                     <h1 className="ml-3 text-2xl font-bold leading-7 text-cool-gray-900 sm:leading-9 sm:truncate">
-                      Food Categories
+                      Food Sub Categories
                     </h1>
                   </div>
                   <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
@@ -132,8 +133,8 @@ const Index: React.FC = () => {
               </span>
               <span className="shadow-sm rounded-md">
                 <Link
-                  href="/food-categories/add" className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:shadow-outline-cyan focus:border-cyan-700 active:bg-cyan-700 transition duration-150 ease-in-out">
-                  New Category
+                  href="/food-sub-categories/add" className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:shadow-outline-cyan focus:border-cyan-700 active:bg-cyan-700 transition duration-150 ease-in-out">
+                  New Sub Category
                 </Link>
               </span>
             </div>
@@ -142,7 +143,6 @@ const Index: React.FC = () => {
       </div>
       <div className="hidden sm:block mt-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
           <div className="flex flex-col mt-2">
             <div className="align-middle min-w-full overflow-x-auto overflow-hidden mb-5">
               <div className="grid grid-cols-4 gap-4">

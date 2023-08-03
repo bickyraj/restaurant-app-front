@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { EventEmitter } from "events";
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import AuthService from "./AuthService";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -23,7 +24,13 @@ api.interceptors.response.use(
   },
   (error: AxiosError) => {
     NProgress.done();
-    return Promise.reject(error);
+    if (error.response?.status == 403) {
+      const authService = new AuthService();
+      authService.logout();
+      location.href = "/login";
+    } else {
+      return Promise.reject(error);
+    }
   }
 );
 
